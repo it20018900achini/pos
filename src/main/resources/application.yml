@@ -3,14 +3,20 @@ spring:
     name: pos-system
 
   datasource:
-    url: jdbc:mysql://${DATABASE_HOST:mysql-23c21abf-achininirupama98-af18.d.aivencloud.com}:${DATABASE_PORT:19141}/${DATABASE_NAME:pos_sys}
+    url: jdbc:mysql://${DATABASE_HOST:mysql-23c21abf-achininirupama98-af18.d.aivencloud.com}:${DATABASE_PORT:19141}/${DATABASE_NAME:pos_sys}?useSSL=false&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DATABASE_USER:avnadmin}
     password: ${DATABASE_PASSWORD:AVNS_Qos-3KNcEN0dRPcMQVh}
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update         # or validate / create-drop (depending on environment)
+      use-new-id-generator-mappings: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+
     show-sql: true
 
   mail:
