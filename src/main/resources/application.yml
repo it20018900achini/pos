@@ -3,7 +3,7 @@ spring:
     name: pos-system
 
   datasource:
-    url: jdbc:mysql://${DATABASE_HOST:mysql-23c21abf-achininirupama98-af18.d.aivencloud.com}:${DATABASE_PORT:19141}/${DATABASE_NAME:pos_sys}?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://${DATABASE_HOST:mysql-23c21abf-achininirupama98-af18.d.aivencloud.com}:${DATABASE_PORT:19141}/${DATABASE_NAME:pos_sys}?useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DATABASE_USER:avnadmin}
     password: ${DATABASE_PASSWORD:AVNS_Qos-3KNcEN0dRPcMQVh}
