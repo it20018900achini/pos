@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: pos-system
+
+  datasource:
+    url: jdbc:mysql://${DATABASE_HOST:mysql-23c21abf-achininirupama98-af18.d.aivencloud.com}:${DATABASE_PORT:19141}/${DATABASE_NAME:pos_sys}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DATABASE_USER:avnadmin}
+    password: ${DATABASE_PASSWORD:AVNS_Qos-3KNcEN0dRPcMQVh}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nalindadsn@gmail.com
+    password: 941151663Bandara
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  devtools:
+    livereload:
+      enabled: true
+
+server:
+  port: 5000
+
+razorpay:
+  api:
+    key: your razor pay key
+    secret: your razorpay secret key
+
+stripe:
+  api:
+    key: your stripe key
+
+
+
+app:
+  frontend:
+    reset-url: http://localhost:5173/auth/reset-password?token=
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql: TRACE
