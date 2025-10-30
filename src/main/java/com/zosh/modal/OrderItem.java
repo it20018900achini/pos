@@ -26,4 +26,6 @@ public class OrderItem {
 
     @ManyToOne
     private Order order;
+
+    private Integer returned = 0; // New field added
 }

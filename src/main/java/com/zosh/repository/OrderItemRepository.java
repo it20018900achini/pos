@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     @Query("""
-        SELECT p.id, p.name, SUM(oi.quantity)
+        SELECT p.id, p.name, oi.returned, SUM(oi.quantity)
         FROM OrderItem oi
         JOIN oi.product p
         JOIN oi.order o
