@@ -5,7 +5,9 @@ import com.zosh.payload.StoreAnalysis.BranchSalesDTO;
 import com.zosh.payload.StoreAnalysis.CategorySalesDTO;
 import com.zosh.payload.StoreAnalysis.PaymentInsightDTO;
 import com.zosh.payload.StoreAnalysis.TimeSeriesPointDTO;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -44,6 +46,21 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
     );
 
 
+    @Modifying
+    @Transactional
+    @Query("""
+           UPDATE OrderItem oi 
+           SET oi.returned = :returned,
+               oi.returnReason = :reason,
+               oi.returnQuantity = :qty
+           WHERE oi.id = :id
+           """)
+    void updateReturnDetails(
+            @Param("id") Long id,
+            @Param("returned") Boolean returned,
+            @Param("reason") String reason,
+            @Param("qty") Integer qty
+    );
 
-
+//    void updateReturnServices(Long id, Boolean returned);
 }

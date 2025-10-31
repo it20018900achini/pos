@@ -27,5 +27,9 @@ public class OrderItem {
     @ManyToOne
     private Order order;
 
-    private Integer returned = 0; // New field added
+    private Boolean returned = false;
+
+    private String returnReason;
+
+    private Integer returnQuantity = 0;
 }
