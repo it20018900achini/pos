@@ -19,7 +19,7 @@ import java.util.Optional;
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     @Query("""
-        SELECT p.id, p.name, oi.returned, SUM(oi.quantity)
+        SELECT p.id, p.name, oi.returned, oi.return_reason, oi.return_quantity, SUM(oi.quantity)
         FROM OrderItem oi
         JOIN oi.product p
         JOIN oi.order o
@@ -51,8 +51,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
     @Query("""
            UPDATE OrderItem oi 
            SET oi.returned = :returned,
-               oi.returnReason = :reason,
-               oi.returnQuantity = :qty
+               oi.return_reason = :reason,
+               oi.return_quantity = :qty
            WHERE oi.id = :id
            """)
     void updateReturnDetails(

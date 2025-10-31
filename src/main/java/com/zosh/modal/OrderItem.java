@@ -29,7 +29,7 @@ public class OrderItem {
 
     private Boolean returned = false;
 
-    private String returnReason;
+    private String return_reason;
 
-    private Integer returnQuantity = 0;
+    private Integer return_quantity = 0;
 }

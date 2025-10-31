@@ -13,6 +13,8 @@ public class OrderItemMapper {
                 .productId(item.getProduct() != null ? item.getProduct().getId() : null)
                 .quantity(item.getQuantity())
                 .returned(item.getReturned())
+                .return_reason(item.getReturn_reason())
+                .return_quantity(item.getReturn_quantity())
                 .price(item.getPrice())
                 .product(item.getProduct() != null ? ProductMapper.toDto(item.getProduct()) : null)
                 .build();

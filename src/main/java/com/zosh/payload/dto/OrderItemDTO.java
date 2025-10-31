@@ -16,7 +16,10 @@ public class OrderItemDTO {
         private Integer quantity;
         private ProductDTO product;
         private Double price;
-        private Boolean returned;
+    private Boolean returned;
+    private String return_reason;
+    private Integer return_quantity;
+
 
 
 }
