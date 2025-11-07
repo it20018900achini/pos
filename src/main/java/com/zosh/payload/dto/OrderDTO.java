@@ -16,6 +16,8 @@ import java.util.List;
 public class OrderDTO {
     private Long id;
     private Double totalAmount;
+    private Double cash;
+    private Double credit;
     private Long branchId;
     private Long cashierId;
     private Customer customer;
