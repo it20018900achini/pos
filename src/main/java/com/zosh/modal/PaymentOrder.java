@@ -17,6 +17,8 @@ public class PaymentOrder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private Double cash;
+    private Double credit;
     private Double amount;
 
     private PaymentOrderStatus status = PaymentOrderStatus.PENDING;
