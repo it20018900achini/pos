@@ -60,7 +60,11 @@ public class OrderServiceImpl implements OrderService {
         }).toList();
 
         double total = orderItems.stream().mapToDouble(OrderItem::getPrice).sum();
+        double cash = order.getCash();
+        double credit = order.getCredit();
         order.setTotalAmount(total);
+        order.setCash(cash);
+        order.setCredit(credit);
         order.setItems(orderItems);
 
         return OrderMapper.toDto(orderRepository.save(order));
