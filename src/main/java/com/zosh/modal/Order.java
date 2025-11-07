@@ -23,6 +23,8 @@ public class Order {
     private Long id;
 
     private Double totalAmount;
+    private Double cash;
+    private Double credit;
 
     private LocalDateTime createdAt;
 
