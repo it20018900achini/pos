@@ -55,12 +55,15 @@ public class AuthController {
     public ResponseEntity<ApiResponseBody<AuthResponse>> loginHandler(
             @RequestBody LoginDto req) throws UserException {
 
-        AuthResponse response=authService.login(req.getEmail(), req.getPassword());
+        AuthResponse response = authService.login(req.getEmail(), req.getPassword());
 
-        return ResponseEntity.ok(new ApiResponseBody<>(
+        ApiResponseBody<AuthResponse> body = new ApiResponseBody<>(
                 true,
                 "User logged in successfully",
-                response));
+                response
+        );
+
+        return ResponseEntity.ok(body);
     }
 
     @PostMapping("/forgot-password")

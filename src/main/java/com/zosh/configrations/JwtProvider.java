@@ -1,6 +1,7 @@
 package com.zosh.configrations;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
@@ -15,34 +16,87 @@ import java.util.Set;
 
 @Service
 public class JwtProvider {
-	static SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 
-	public String generateToken(Authentication auth){
-		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-		String roles = populateAuthorities(authorities);
+    static SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 
-        return Jwts.builder().issuedAt(new Date())
-				.expiration(new Date(new Date().getTime() + 86400000))
-				.claim("email",auth.getName())
-				.claim("authorities",roles)
-				.signWith(key)
-				.compact();
-	}
+    // ✅ Create Token
+    public String generateToken(Authentication auth){
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+        String roles = populateAuthorities(authorities);
 
-	public String getEmailFromJwtToken(String jwt){
-		jwt = jwt.substring(7);
-		Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).getPayload();
+        return Jwts.builder()
+                .issuedAt(new Date())
+                .expiration(new Date(new Date().getTime() + 86400000)) // 1 day
+                .claim("email", auth.getName())
+                .claim("authorities", roles)
+                .signWith(key)
+                .compact();
+    }
 
-		String email = String.valueOf(claims.get("email"));
-		return email;
-	}
+    // ✅ Extract Email
+    public String getEmailFromJwtToken(String jwt){
+        jwt = jwt.startsWith("Bearer ") ? jwt.substring(7) : jwt;
 
-	private String populateAuthorities(Collection<? extends GrantedAuthority> authorities) {
-		Set<String> auths = new HashSet<>();
+        Claims claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(jwt)
+                .getPayload();
 
-		for(GrantedAuthority authority : authorities){
-			auths.add(authority.getAuthority());
-		}
-		return String.join(",",auths);
-	}
+        return claims.get("email", String.class);
+    }
+
+    // ✅ Check if token is valid (signature + structure)
+    public boolean isTokenValid(String token) {
+        try {
+            token = token.startsWith("Bearer ") ? token.substring(7) : token;
+
+            Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token);  // throws exception if invalid
+
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // ✅ Check if token is expired
+    public boolean isTokenExpired(String token) {
+        try {
+            token = token.startsWith("Bearer ") ? token.substring(7) : token;
+
+            Claims claims = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+
+            return claims.getExpiration().before(new Date());
+
+        } catch (ExpiredJwtException e) {
+            return true;
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    // ✅ Validate token + email match
+    public boolean validateToken(String token, String email) {
+        if (!isTokenValid(token)) return false;
+        if (isTokenExpired(token)) return false;
+        return getEmailFromJwtToken(token).equals(email);
+    }
+
+    // ✅ Convert roles to CSV string
+    private String populateAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        Set<String> auths = new HashSet<>();
+
+        for(GrantedAuthority authority : authorities){
+            auths.add(authority.getAuthority());
+        }
+        return String.join(",", auths);
+    }
 }
