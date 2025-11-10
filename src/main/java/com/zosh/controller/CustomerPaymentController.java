@@ -1,8 +1,14 @@
 package com.zosh.controller;
 
+//import com.zosh.payment.dto.CustomerPaymentCreateDTO;
+//import com.zosh.payment.model.CustomerPayment;
+//import com.zosh.payment.service.CustomerPaymentService;
+import com.zosh.modal.CustomerPayment;
 import com.zosh.modal.CustomerPaymentCreateDTO;
 import com.zosh.service.CustomerPaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,21 +16,31 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CustomerPaymentController {
 
-    private final com.zosh.service.CustomerPaymentService service;
+    private final CustomerPaymentService service;
 
     @PostMapping
-
-    public Object create(@RequestBody com.zosh.modal.CustomerPaymentCreateDTO dto) {
+    public CustomerPayment create(@RequestBody CustomerPaymentCreateDTO dto) {
         return service.createPayment(dto);
     }
 
+    @GetMapping
+    public Page<CustomerPayment> getAll(Pageable pageable) {
+        return service.getAll(pageable);
+    }
+
     @GetMapping("/customer/{customerId}")
-    public Object getByCustomer(@PathVariable Long customerId) {
-        return service.getPaymentsByCustomer(customerId);
+    public Page<CustomerPayment> getByCustomer(
+            @PathVariable Long customerId,
+            Pageable pageable
+    ) {
+        return service.getPaymentsByCustomer(customerId, pageable);
     }
 
     @GetMapping("/cashier/{cashierId}")
-    public Object getByCashier(@PathVariable Long cashierId) {
-        return service.getPaymentsByCashier(cashierId);
+    public Page<CustomerPayment> getByCashier(
+            @PathVariable Long cashierId,
+            Pageable pageable
+    ) {
+        return service.getPaymentsByCashier(cashierId, pageable);
     }
 }

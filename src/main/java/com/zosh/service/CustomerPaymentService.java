@@ -1,22 +1,23 @@
 package com.zosh.service;
 
-//import com.zosh.payment.dto.CustomerPaymentCreateDTO;
-//import com.zosh.payment.model.*;
+
+//import com.zosh.payment.model.CustomerPayment;
 //import com.zosh.payment.repo.CustomerPaymentRepository;
+//import com.zosh.payment.dto.CustomerPaymentCreateDTO;
+//import com.zosh.payment.model.PaymentMethod;
 import com.zosh.modal.CustomerPayment;
-import com.zosh.modal.CustomerPayment.*;
 import com.zosh.modal.CustomerPaymentCreateDTO;
 import com.zosh.modal.PaymentMethod;
 import com.zosh.repository.CustomerPaymentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerPaymentService {
-
     private final CustomerPaymentRepository repo;
 
     public CustomerPayment createPayment(CustomerPaymentCreateDTO dto) {
@@ -35,11 +36,15 @@ public class CustomerPaymentService {
         return repo.save(payment);
     }
 
-    public List<CustomerPayment> getPaymentsByCustomer(Long customerId) {
-        return repo.findByCustomerId(customerId);
+    public Page<CustomerPayment> getPaymentsByCustomer(Long customerId, Pageable pageable) {
+        return repo.findByCustomerId(customerId, pageable);
     }
 
-    public List<CustomerPayment> getPaymentsByCashier(Long cashierId) {
-        return repo.findByCashierId(cashierId);
+    public Page<CustomerPayment> getPaymentsByCashier(Long cashierId, Pageable pageable) {
+        return repo.findByCashierId(cashierId, pageable);
+    }
+
+    public Page<CustomerPayment> getAll(Pageable pageable) {
+        return repo.findAll(pageable);
     }
 }
