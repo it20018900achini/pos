@@ -59,23 +59,12 @@ public class OrderController {
     @GetMapping("/cashier/{cashierId}")
     public ResponseEntity<Page<OrderDTO>> getOrdersByCashier(
             @PathVariable Long cashierId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,desc") String sort,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(required = false) String search,
+            Pageable pageable
     ) {
-        // Parse sort parameter
-        String[] sortParams = sort.split(",");
-        Sort sortOrder = Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]);
-
-        Pageable pageable = PageRequest.of(page, size, sortOrder);
-
-        Page<OrderDTO> orders = orderService.getOrdersByCashier(cashierId,  start, end, search,pageable);
-
+        Page<OrderDTO> orders = orderService.getOrdersByCashier(cashierId, start, end, search,pageable);
         return ResponseEntity.ok(orders);
     }
 

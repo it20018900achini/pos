@@ -7,17 +7,25 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: avnadmin
     password: AVNS_Qos-3KNcEN0dRPcMQVh
+    # Ensure JDBC driver uses UTC
+    properties:
+      serverTimezone: UTC
 
   jpa:
     hibernate:
-      ddl-auto: update         # or validate / create-drop (depending on environment)
+      ddl-auto: update
       use-new-id-generator-mappings: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-
+        # Store timestamps in UTC
+        jdbc.time_zone: UTC
 
     show-sql: true
+    # JSON serialization timezone
+    jackson:
+      time-zone: Asia/Colombo
+      date-format: yyyy-MM-dd'T'HH:mm:ss
 
   mail:
     host: smtp.gmail.com
@@ -46,8 +54,6 @@ razorpay:
 stripe:
   api:
     key: your stripe key
-
-
 
 app:
   frontend:
