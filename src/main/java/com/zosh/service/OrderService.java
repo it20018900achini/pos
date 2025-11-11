@@ -9,6 +9,7 @@ import com.zosh.payload.dto.OrderDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,8 @@ public interface OrderService {
                                      OrderStatus status);
 
     // ← CHANGE THIS
-    Page<OrderDTO> getOrdersByCashier(Long cashierId, Pageable pageable);
+    Page<OrderDTO> getOrdersByCashier(Long cashierId, Pageable pageable,
+                                      LocalDateTime start, LocalDateTime end, String search);
 
     void deleteOrder(Long id);
     List<OrderDTO> getTodayOrdersByBranch(Long branchId);

@@ -7,6 +7,7 @@ import com.zosh.payload.dto.OrderDTO;
 import com.zosh.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.jaxb.SpringDataJaxb;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -52,11 +54,16 @@ public class OrderController {
         );
     }
     @GetMapping("/cashier/{cashierId}")
-    public ResponseEntity<Page<OrderDTO>> getOrdersByCashier(
+    public Page<OrderDTO> getOrdersByCashier(
             @PathVariable Long cashierId,
-            Pageable pageable) {
-        Page<OrderDTO> page = orderService.getOrdersByCashier(cashierId, pageable);
-        return ResponseEntity.ok(page);
+            Pageable pageable,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(required = false) String search
+    ) {
+        return orderService.getOrdersByCashier(cashierId, pageable, startDate, endDate, search);
     }
 
     @GetMapping("/today/branch/{branchId}")
