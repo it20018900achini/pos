@@ -5,6 +5,7 @@ import com.zosh.modal.User;
 import com.zosh.payload.StoreAnalysis.BranchSalesDTO;
 import com.zosh.payload.StoreAnalysis.PaymentInsightDTO;
 import com.zosh.payload.StoreAnalysis.TimeSeriesPointDTO;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +19,7 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByCustomerId(Long customerId);
     List<Order> findByBranchId(Long branchId);
-    List<Order> findByCashierId(Long cashierId);
+    List<Order> findByCashierId(Long cashierId, Pageable pageable);
     List<Order> findByBranchIdAndCreatedAtBetween(Long branchId,
                                                   LocalDateTime start,
                                                   LocalDateTime end);

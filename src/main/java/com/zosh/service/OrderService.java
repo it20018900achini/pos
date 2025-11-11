@@ -6,6 +6,8 @@ import com.zosh.domain.PaymentType;
 import com.zosh.exception.UserException;
 import com.zosh.payload.dto.OrderDTO;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface OrderService {
@@ -17,7 +19,7 @@ public interface OrderService {
                                      Long cashierId,
                                      PaymentType paymentType,
                                      OrderStatus status);
-    List<OrderDTO> getOrdersByCashier(Long cashierId);
+    List<OrderDTO> getOrdersByCashier(Long cashierId, Pageable pageable);
     void deleteOrder(Long id);
     List<OrderDTO> getTodayOrdersByBranch(Long branchId);
     List<OrderDTO> getOrdersByCustomerId(Long customerId);

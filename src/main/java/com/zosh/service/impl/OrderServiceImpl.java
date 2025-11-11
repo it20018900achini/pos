@@ -20,6 +20,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -118,8 +121,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getOrdersByCashier(Long cashierId) {
-        return orderRepository.findByCashierId(cashierId).stream()
+    public List<OrderDTO> getOrdersByCashier(Long cashierId, Pageable pageable) {
+        return orderRepository.findByCashierId(cashierId,pageable).stream()
                 .map(OrderMapper::toDto)
                 .collect(Collectors.toList());
     }
