@@ -74,7 +74,7 @@ public class OrderController {
         LocalDateTime start = startDate != null ? startDate.toLocalDate().atStartOfDay() : null;
         LocalDateTime end = endDate != null ? endDate.toLocalDate().atTime(23, 59, 59) : null;
 
-        return orderService.getOrdersByCashier(cashierId, pageable, startDate, endDate, search);
+        return orderService.getOrdersByCashier(cashierId, pageable, start, end, search);
     }
 
     @GetMapping("/today/branch/{branchId}")
