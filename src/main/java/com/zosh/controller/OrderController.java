@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -62,7 +64,16 @@ public class OrderController {
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             @RequestParam(required = false) String search
+
+
+
+
     ) {
+
+        // Convert LocalDate to LocalDateTime for filtering
+        LocalDateTime start = startDate != null ? startDate.toLocalDate().atStartOfDay() : null;
+        LocalDateTime end = endDate != null ? endDate.toLocalDate().atTime(23, 59, 59) : null;
+
         return orderService.getOrdersByCashier(cashierId, pageable, startDate, endDate, search);
     }
 
