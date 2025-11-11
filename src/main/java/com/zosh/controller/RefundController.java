@@ -42,12 +42,15 @@ public class RefundController {
     // ✅ 3. Get refunds by cashier
     @GetMapping("/cashier/{cashierId}")
     public ResponseEntity<List<RefundDTO>> getRefundsByCashier(
-            @PathVariable Long cashierId) {
+            @PathVariable Long cashierId ) {
         List<RefundDTO> refunds = refundService.getRefundsByCashier(cashierId).stream()
                 .map(RefundMapper::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(refunds);
     }
+
+
+
 
     // ✅ 4. Get refunds by branch
     @GetMapping("/branch/{branchId}")

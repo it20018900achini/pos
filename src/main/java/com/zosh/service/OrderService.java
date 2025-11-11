@@ -10,6 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface OrderService {
     OrderDTO createOrder(OrderDTO dto) throws UserException;
     OrderDTO getOrderById(Long id);
@@ -19,7 +22,10 @@ public interface OrderService {
                                      Long cashierId,
                                      PaymentType paymentType,
                                      OrderStatus status);
-    List<OrderDTO> getOrdersByCashier(Long cashierId, Pageable pageable);
+
+    // ← CHANGE THIS
+    Page<OrderDTO> getOrdersByCashier(Long cashierId, Pageable pageable);
+
     void deleteOrder(Long id);
     List<OrderDTO> getTodayOrdersByBranch(Long branchId);
     List<OrderDTO> getOrdersByCustomerId(Long customerId);

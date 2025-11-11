@@ -121,10 +121,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getOrdersByCashier(Long cashierId, Pageable pageable) {
-        return orderRepository.findByCashierId(cashierId,pageable).stream()
-                .map(OrderMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<OrderDTO> getOrdersByCashier(Long cashierId, Pageable pageable) {
+        return orderRepository.findByCashierId(cashierId, pageable)
+                .map(OrderMapper::toDto); // Page.map preserves pagination
     }
 
     @Override

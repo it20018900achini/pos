@@ -51,10 +51,12 @@ public class OrderController {
                 )
         );
     }
-
     @GetMapping("/cashier/{cashierId}")
-    public ResponseEntity<List<OrderDTO>> getOrdersByCashier(@PathVariable Long cashierId,Pageable pageable) {
-        return ResponseEntity.ok(orderService.getOrdersByCashier(cashierId, pageable));
+    public ResponseEntity<Page<OrderDTO>> getOrdersByCashier(
+            @PathVariable Long cashierId,
+            Pageable pageable) {
+        Page<OrderDTO> page = orderService.getOrdersByCashier(cashierId, pageable);
+        return ResponseEntity.ok(page);
     }
 
     @GetMapping("/today/branch/{branchId}")
