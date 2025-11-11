@@ -6,6 +6,7 @@ import com.zosh.exception.UserException;
 import com.zosh.payload.dto.OrderDTO;
 import com.zosh.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+import org.springframework.data.domain.Sort;
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -56,25 +57,26 @@ public class OrderController {
         );
     }
     @GetMapping("/cashier/{cashierId}")
-    public Page<OrderDTO> getOrdersByCashier(
+    public ResponseEntity<Page<OrderDTO>> getOrdersByCashier(
             @PathVariable Long cashierId,
-            Pageable pageable,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,desc") String sort,
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
             @RequestParam(required = false) String search
-
-
-
-
     ) {
+        // Parse sort parameter
+        String[] sortParams = sort.split(",");
+        Sort sortOrder = Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]);
 
-        // Convert LocalDate to LocalDateTime for filtering
-        LocalDateTime start = startDate != null ? startDate.toLocalDate().atStartOfDay() : null;
-        LocalDateTime end = endDate != null ? endDate.toLocalDate().atTime(23, 59, 59) : null;
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
 
-        return orderService.getOrdersByCashier(cashierId, pageable, start, end, search);
+        Page<OrderDTO> orders = orderService.getOrdersByCashier(cashierId,  start, end, search,pageable);
+
+        return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/today/branch/{branchId}")

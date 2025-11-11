@@ -21,7 +21,7 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // Existing paginated query
-    Page<Order> findByCashierId(Long cashierId, Pageable pageable);
+//    Page<Order> findByCashierId(Long cashierId, Pageable pageable);
 
     // New query: cashier + date range + search
     @Query("SELECT o FROM Order o " +
@@ -30,7 +30,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "AND (:end IS NULL OR o.createdAt <= :end) " +
             "AND (:search IS NULL OR CAST(o.id AS string) LIKE %:search% " +
             "OR LOWER(o.customer.fullName) LIKE %:search%)")
-    Page<Order> findByCashierWithFilters(
+    Page<Order> findByCashierId(
             @Param("cashierId") Long cashierId,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,

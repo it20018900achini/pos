@@ -25,8 +25,13 @@ public interface OrderService {
                                      OrderStatus status);
 
     // ← CHANGE THIS
-    Page<OrderDTO> getOrdersByCashier(Long cashierId, Pageable pageable,
-                                      LocalDateTime start, LocalDateTime end, String search);
+    Page<OrderDTO> getOrdersByCashier(
+            Long cashierId,
+            LocalDateTime start,
+            LocalDateTime end,
+            String search,
+            Pageable pageable
+    );
 
     void deleteOrder(Long id);
     List<OrderDTO> getTodayOrdersByBranch(Long branchId);

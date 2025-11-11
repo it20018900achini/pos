@@ -120,18 +120,10 @@ public class OrderServiceImpl implements OrderService {
 //                .collect(Collectors.toList());
     }
     @Override
-    public Page<OrderDTO> getOrdersByCashier(Long cashierId, Pageable pageable,
-                                             LocalDateTime start, LocalDateTime end,
-                                             String search) {
-        Page<Order> ordersPage = orderRepository.findByCashierWithFilters(
-                cashierId,
-                start,
-                end,
-                search != null ? search.toLowerCase() : null,
-                pageable
-        );
-
-        return ordersPage.map(OrderMapper::toDto);
+    public Page<OrderDTO> getOrdersByCashier(Long cashierId,
+                                             LocalDateTime start, LocalDateTime end, String search,Pageable pageable) {
+        Page<Order> orders = orderRepository.findByCashierId(cashierId, start, end, search, pageable);
+        return orders.map(OrderMapper::toDto);
     }
 
 
