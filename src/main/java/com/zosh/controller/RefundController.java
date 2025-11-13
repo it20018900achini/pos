@@ -1,20 +1,20 @@
 package com.zosh.controller;
 
-import com.zosh.exception.ResourceNotFoundException;
+import com.zosh.domain.RefundStatus;
+import com.zosh.domain.PaymentType;
 import com.zosh.exception.UserException;
-import com.zosh.mapper.RefundMapper;
-import com.zosh.modal.Refund;
 import com.zosh.payload.dto.RefundDTO;
 import com.zosh.service.RefundService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/api/refunds")
 @RequiredArgsConstructor
@@ -22,79 +22,69 @@ public class RefundController {
 
     private final RefundService refundService;
 
-    // ✅ 1. Create a refund
     @PostMapping
-    public ResponseEntity<RefundDTO> createRefund(@RequestBody RefundDTO refundDTO)
-            throws UserException, ResourceNotFoundException {
-        Refund refund = refundService.createRefund(refundDTO);
-        return ResponseEntity.ok(RefundMapper.toDTO(refund));
+    @PreAuthorize("hasAuthority('ROLE_CASHIER')")
+    public ResponseEntity<RefundDTO> createRefund(@RequestBody RefundDTO dto) throws UserException {
+        return ResponseEntity.ok(refundService.createRefund(dto));
     }
 
-    // ✅ 2. Get all refunds (admin)
-    @GetMapping
-    public ResponseEntity<List<RefundDTO>> getAllRefunds() {
-        List<RefundDTO> refunds = refundService.getAllRefunds().stream()
-                .map(RefundMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(refunds);
-    }
-
-    // ✅ 3. Get refunds by cashier
-    @GetMapping("/cashier/{cashierId}")
-    public ResponseEntity<List<RefundDTO>> getRefundsByCashier(
-            @PathVariable Long cashierId ) {
-        List<RefundDTO> refunds = refundService.getRefundsByCashier(cashierId).stream()
-                .map(RefundMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(refunds);
-    }
-
-
-
-
-    // ✅ 4. Get refunds by branch
-    @GetMapping("/branch/{branchId}")
-    public ResponseEntity<List<RefundDTO>> getRefundsByBranch(@PathVariable Long branchId) {
-        List<RefundDTO> refunds = refundService.getRefundsByBranch(branchId).stream()
-                .map(RefundMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(refunds);
-    }
-
-    // ✅ 5. Get refunds by shift report
-    @GetMapping("/shift/{shiftReportId}")
-    public ResponseEntity<List<RefundDTO>> getRefundsByShift(@PathVariable Long shiftReportId) {
-        List<RefundDTO> refunds = refundService.getRefundsByShiftReport(shiftReportId).stream()
-                .map(RefundMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(refunds);
-    }
-
-    // ✅ 6. Get refunds by cashier and date range
-    @GetMapping("/cashier/{cashierId}/range")
-    public ResponseEntity<List<RefundDTO>> getRefundsByCashierAndDateRange(
-            @PathVariable Long cashierId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to
-    ) {
-        List<RefundDTO> refunds = refundService
-                .getRefundsByCashierAndDateRange(cashierId, from, to).stream()
-                .map(RefundMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(refunds);
-    }
-
-    // ✅ 7. Get refund by ID
     @GetMapping("/{id}")
-    public ResponseEntity<RefundDTO> getRefundById(@PathVariable Long id) throws ResourceNotFoundException {
-        Refund refund = refundService.getRefundById(id);
-        return ResponseEntity.ok(RefundMapper.toDTO(refund));
+    public ResponseEntity<RefundDTO> getRefund(@PathVariable Long id) {
+        return ResponseEntity.ok(refundService.getRefundById(id));
     }
 
-    // ✅ 8. Delete refund
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRefund(@PathVariable Long id) throws ResourceNotFoundException {
-        refundService.deleteRefund(id);
-        return ResponseEntity.ok("Refund deleted successfully.");
+
+    @GetMapping("/branch/{branchId}")
+    public ResponseEntity<List<RefundDTO>> getRefundsByBranch(
+            @PathVariable Long branchId,
+            @RequestParam(required = false) Long customerId,
+            @RequestParam(required = false) Long cashierId,
+            @RequestParam(required = false) PaymentType paymentType,
+            @RequestParam(required = false) RefundStatus status) {
+        return ResponseEntity.ok(refundService.getRefundsByBranch(
+                        branchId,
+                        customerId,
+                        cashierId,
+                        paymentType,
+                        status
+                )
+        );
     }
+    @GetMapping("/cashier/{cashierId}")
+    public ResponseEntity<Page<RefundDTO>> getRefundsByCashier(
+            @PathVariable Long cashierId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(required = false) String search,
+            Pageable pageable
+    ) {
+        Page<RefundDTO> refunds = refundService.getRefundsByCashier(cashierId, start, end, search,pageable);
+        return ResponseEntity.ok(refunds);
+    }
+
+    @GetMapping("/today/branch/{branchId}")
+    public ResponseEntity<List<RefundDTO>> getTodayRefunds(@PathVariable Long branchId) {
+        return ResponseEntity.ok(refundService.getTodayRefundsByBranch(branchId));
+    }
+
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<RefundDTO>> getCustomerRefunds(@PathVariable Long customerId) {
+        return ResponseEntity.ok(refundService.getRefundsByCustomerId(customerId));
+    }
+
+    @GetMapping("/recent/{branchId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_BRANCH_MANAGER', 'ROLE_BRANCH_ADMIN')")
+    public ResponseEntity<List<RefundDTO>> getRecentRefunds(@PathVariable Long branchId) {
+        List<RefundDTO> recentRefunds = refundService.getTop5RecentRefundsByBranchId(branchId);
+        return ResponseEntity.ok(recentRefunds);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_STORE_MANAGER') or hasAuthority('ROLE_STORE_ADMIN')")
+    public ResponseEntity<Void> deleteRefund(@PathVariable Long id) {
+        refundService.deleteRefund(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

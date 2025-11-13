@@ -85,9 +85,7 @@ public class ShiftReportServiceImpl implements ShiftReportService {
                 shift.getCashier(), shift.getShiftStart(), shiftEnd
         );
 
-        double totalRefunds = refunds.stream()
-                .mapToDouble(refund -> refund.getAmount() != null ? refund.getAmount() : 0.0)
-                .sum();
+        double totalRefunds = refunds.stream().mapToDouble(Refund::getTotalAmount).sum();
 
         double totalSales = orders.stream().mapToDouble(Order::getTotalAmount).sum();
         int totalOrders = orders.size();
@@ -154,9 +152,7 @@ public class ShiftReportServiceImpl implements ShiftReportService {
         double totalSales = orders.stream().mapToDouble(Order::getTotalAmount).sum();
         int totalOrders = orders.size();
 //        double totalRefunds = refunds.stream().mapToDouble(Refund::getAmount).sum();
-        double totalRefunds = refunds.stream()
-                .mapToDouble(refund -> refund.getAmount() != null ? refund.getAmount() : 0.0)
-                .sum();
+        double totalRefunds =refunds.stream().mapToDouble(Refund::getTotalAmount).sum();
 
         double netSales = totalSales - totalRefunds;
 

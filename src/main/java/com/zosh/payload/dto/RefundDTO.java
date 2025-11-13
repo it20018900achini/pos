@@ -1,22 +1,31 @@
 package com.zosh.payload.dto;
 
-
+import com.zosh.domain.RefundStatus;
+import com.zosh.domain.PaymentType;
+import com.zosh.modal.Customer;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class RefundDTO {
+
     private Long id;
-    private Long orderId;
-    private String reason;
-    private Double amount;
-    private String cashierName;
-    private Long shiftReportId;
+    private Double totalAmount;
+    private Double cash;
+    private Double credit;
     private Long branchId;
+    private Long cashierId;
+    private Customer customer;
+    private List<RefundItemDTO> items;
     private LocalDateTime createdAt;
+    private PaymentType paymentType;
+//    private RefundStatus status;
 }

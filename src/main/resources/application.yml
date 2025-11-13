@@ -57,7 +57,7 @@ stripe:
 
 app:
   frontend:
-    reset-url: https://pos-frontend-eight-lyart.vercel.app/auth/reset-password?token=
+    reset-url: http://localhost:5173/auth/reset-password?token=
 
 logging:
   level:

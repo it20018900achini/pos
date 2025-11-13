@@ -189,7 +189,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             // Set the callback URL and method
             paymentLinkRequest.put("callback_url",
-                    "https://pos-frontend-eight-lyart.vercel.app/payment-success/"+planId);
+                    "http://localhost:5173/payment-success/"+planId);
             paymentLinkRequest.put("callback_method","get");
 
             PaymentLink payment = razorpay.paymentLink.create(paymentLinkRequest);
@@ -210,8 +210,8 @@ public class PaymentServiceImpl implements PaymentService {
         SessionCreateParams params = SessionCreateParams.builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("https://pos-frontend-eight-lyart.vercel.app/payment-success/"+orderId)
-                .setCancelUrl("https://pos-frontend-eight-lyart.vercel.app/payment/cancel")
+                .setSuccessUrl("http://localhost:5173/payment-success/"+orderId)
+                .setCancelUrl("http://localhost:5173/payment/cancel")
                 .addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)
                         .setPriceData(SessionCreateParams.LineItem.PriceData.builder()

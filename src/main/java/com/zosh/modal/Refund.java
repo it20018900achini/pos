@@ -2,45 +2,60 @@ package com.zosh.modal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zosh.domain.PaymentType;
+import com.zosh.domain.RefundStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
+@Table(name = "refunds")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Refund {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Order order;
-
-    private String reason;
-
-    private Double amount;
-
-    @ManyToOne
-    @JsonIgnore
-    private ShiftReport shiftReport;
-
-    @ManyToOne
-    private User cashier;
-
-    @ManyToOne
-    private Branch branch;
+    private Double totalAmount;
+    private Double cash;
+    private Double credit;
 
     private LocalDateTime createdAt;
 
+    @ManyToOne
+    @JsonIgnore
+    private Branch branch;
+
+    @ManyToOne
+    @JsonIgnore
+    private User cashier;
+
+    @ManyToOne
+    private Customer customer;
+
     private PaymentType paymentType;
 
-//    @ManyToOne
-//    private OrderItem orderItem;
+    @OneToMany(mappedBy = "refund", cascade = CascadeType.ALL)
+    private List<RefundItem> items;
+
+//    private RefundStatus status=RefundStatus.COMPLETED;
+
+
+    // 👇 ADD THIS RELATIONSHIP
+    @ManyToOne
+    @JoinColumn(name = "shift_report_id")
+    private ShiftReport shiftReport;
+
+
+    @PrePersist
+    public void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }
+

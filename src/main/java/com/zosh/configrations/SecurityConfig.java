@@ -56,7 +56,7 @@ public class SecurityConfig {
 						"http://localhost:5173",
 						"https://zosh-pos.vercel.app",
 						"http://127.0.0.1:5173",
-                        "https://pos-frontend-eight-lyart.vercel.app"
+                        "http://localhost:5173"
 				));
 				cfg.setAllowedMethods(Collections.singletonList("*"));
 				cfg.setAllowCredentials(true);

@@ -47,11 +47,18 @@ public class ShiftReportMapper {
                 .map(ProductMapper::toDto)
                 .collect(Collectors.toList());
     }
+//
+//    private static List<RefundDTO> mapRefunds(List<Refund> refunds) {
+//        if (refunds == null) return List.of();
+//        return refunds.stream()
+//                .map(RefundMapper::toDTO)
+//                .collect(Collectors.toList());
+//    }
 
     private static List<RefundDTO> mapRefunds(List<Refund> refunds) {
         if (refunds == null) return List.of();
         return refunds.stream()
-                .map(RefundMapper::toDTO)
+                .map(RefundMapper::toDto)
                 .collect(Collectors.toList());
     }
 }

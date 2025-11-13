@@ -1,55 +1,37 @@
 package com.zosh.service;
 
-import com.zosh.exception.ResourceNotFoundException;
+import com.zosh.domain.RefundStatus;
+import com.zosh.domain.PaymentType;
 import com.zosh.exception.UserException;
-import com.zosh.modal.Refund;
 import com.zosh.payload.dto.RefundDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RefundService {
+    RefundDTO createRefund(RefundDTO dto) throws UserException;
+    RefundDTO getRefundById(Long id);
 
-    /**
-     * 🔁 Create a refund for an order.
-     */
-    Refund createRefund(RefundDTO refundDTO) throws UserException, ResourceNotFoundException;
+    List<RefundDTO> getRefundsByBranch(Long branchId,
+                                     Long customerId,
+                                     Long cashierId,
+                                     PaymentType paymentType,
+                                     RefundStatus status);
 
-    /**
-     * 📋 Get all refunds (admin use).
-     */
-    List<Refund> getAllRefunds();
-
-    /**
-     * 👤 Get all refunds processed by a specific cashier.
-     */
-    List<Refund> getRefundsByCashier(Long cashierId);
-
-    /**
-     * 🧾 Get refunds for a specific shift.
-     */
-    List<Refund> getRefundsByShiftReport(Long shiftReportId);
-
-    /**
-     * 📆 Get refunds by cashier in a date range.
-     */
-    List<Refund> getRefundsByCashierAndDateRange(Long cashierId,
-                                                 LocalDateTime from,
-                                                 LocalDateTime to
+    // ← CHANGE THIS
+    Page<RefundDTO> getRefundsByCashier(
+            Long cashierId,
+            LocalDateTime start,
+            LocalDateTime end,
+            String search,
+            Pageable pageable
     );
 
-    /**
-     * 🏬 Get all refunds processed in a specific branch.
-     */
-    List<Refund> getRefundsByBranch(Long branchId);
+    void deleteRefund(Long id);
+    List<RefundDTO> getTodayRefundsByBranch(Long branchId);
+    List<RefundDTO> getRefundsByCustomerId(Long customerId);
+    List<RefundDTO> getTop5RecentRefundsByBranchId(Long branchId);
 
-    /**
-     * 🔍 Get refund by ID.
-     */
-    Refund getRefundById(Long id) throws ResourceNotFoundException;
-
-    /**
-     * ❌ Delete a refund (if needed).
-     */
-    void deleteRefund(Long refundId) throws ResourceNotFoundException;
 }

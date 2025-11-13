@@ -1,103 +1,171 @@
 package com.zosh.service.impl;
 
-import com.zosh.domain.OrderStatus;
-import com.zosh.exception.ResourceNotFoundException;
+
+import com.zosh.domain.RefundStatus;
+import com.zosh.domain.PaymentType;
 import com.zosh.exception.UserException;
 import com.zosh.mapper.RefundMapper;
-import com.zosh.modal.Branch;
-import com.zosh.modal.Order;
-import com.zosh.modal.Refund;
-import com.zosh.modal.User;
+import com.zosh.modal.*;
 import com.zosh.payload.dto.RefundDTO;
-import com.zosh.repository.BranchRepository;
-import com.zosh.repository.OrderRepository;
-import com.zosh.repository.RefundRepository;
+import com.zosh.repository.*;
+
 import com.zosh.service.RefundService;
 import com.zosh.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
 public class RefundServiceImpl implements RefundService {
 
     private final RefundRepository refundRepository;
-    private final OrderRepository orderRepository;
-    private final UserService userService;
+    private final ProductRepository productRepository;
     private final BranchRepository branchRepository;
+    private final UserService userService;
 
     @Override
-    @Transactional
-    public Refund createRefund(RefundDTO refundDTO) throws UserException, ResourceNotFoundException {
-        User currentCashier = userService.getCurrentUser();
+    public RefundDTO createRefund(RefundDTO dto) throws UserException {
+        User cashier = userService.getCurrentUser();
 
-        Order order = orderRepository.findById(refundDTO.getOrderId())
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        Branch branch=cashier.getBranch();
 
-        Branch branch=branchRepository.findById(refundDTO.getBranchId()).orElseThrow(
-                ()-> new EntityNotFoundException("branch not found")
-        );
-
-        Refund refund = new Refund();
-        refund.setOrder(order);
-        refund.setCashier(currentCashier);
-        refund.setReason(refundDTO.getReason());
-        refund.setAmount(order.getTotalAmount());
-        refund.setCreatedAt(LocalDateTime.now());
-        refund.setBranch(branch);
-
-
-        Refund savedRefund=refundRepository.save(refund);
-        order.setStatus(OrderStatus.REFUNDED);
-        orderRepository.save(order);
-        return savedRefund;
-    }
-
-    @Override
-    public List<Refund> getAllRefunds() {
-        return refundRepository.findAll();
-    }
-
-    @Override
-    public List<Refund> getRefundsByCashier(Long cashierId) {
-        return refundRepository.findByCashierId(cashierId);
-    }
-
-    @Override
-    public List<Refund> getRefundsByShiftReport(Long shiftReportId) {
-        return refundRepository.findByShiftReportId(shiftReportId);
-    }
-
-    @Override
-    public List<Refund> getRefundsByCashierAndDateRange(Long cashierId, LocalDateTime from, LocalDateTime to) {
-        return refundRepository.findByCashierIdAndCreatedAtBetween(cashierId, from, to);
-    }
-
-    @Override
-    public List<Refund> getRefundsByBranch(Long branchId) {
-        List<Refund> refunds= refundRepository.findByBranchId(branchId);
-        return refunds;
-    }
-
-    @Override
-    public Refund getRefundById(Long id) throws ResourceNotFoundException {
-        return refundRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Refund not found"));
-    }
-
-    @Override
-    public void deleteRefund(Long refundId) throws ResourceNotFoundException {
-        if (!refundRepository.existsById(refundId)) {
-            throw new ResourceNotFoundException("Refund not found");
+        if(branch==null){
+            throw new UserException("cashier's branch is null");
         }
-        refundRepository.deleteById(refundId);
+
+        Refund refund = Refund.builder()
+                .branch(branch)
+                .cashier(cashier)
+                .customer(dto.getCustomer())
+                .paymentType(dto.getPaymentType())
+                .build();
+
+        List<RefundItem> refundItems = dto.getItems().stream().map(itemDto -> {
+            Product product = productRepository.findById(itemDto.getProductId())
+                    .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+            return RefundItem.builder()
+                    .product(product)
+                    .quantity(itemDto.getQuantity())
+                    .price(product.getSellingPrice() * itemDto.getQuantity())
+                    .refund(refund)
+
+                    .build();
+        }).toList();
+
+        double total = refundItems.stream().mapToDouble(RefundItem::getPrice).sum();
+//        double cash = refund.getCash();
+//        double credit = refund.getCredit();
+        refund.setTotalAmount(total);
+        refund.setCash(dto.getCash());
+        refund.setCredit(dto.getCredit());
+        System.out.println(dto.getCredit());
+        refund.setItems(refundItems);
+        return RefundMapper.toDto(refundRepository.save(refund));
     }
 
+    @Override
+    public RefundDTO getRefundById(Long id) {
+        return refundRepository.findById(id)
+                .map(RefundMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Refund not found"));
+    }
+
+
+
+    @Override
+    public List<RefundDTO> getRefundsByBranch(Long branchId,
+                                            Long customerId,
+                                            Long cashierId,
+                                            PaymentType paymentType,
+                                            RefundStatus status) {
+        return refundRepository.findByBranchId(branchId).stream()
+
+                // ✅ Filter by Customer ID (if provided)
+                .filter(refund -> customerId == null ||
+                        (refund.getCustomer() != null &&
+                                refund.getCustomer().getId().equals(customerId)))
+
+                // ✅ Filter by Cashier ID (if provided)
+                .filter(refund -> cashierId==null ||
+                        (refund.getCashier() != null &&
+                                refund.getCashier().getId().equals(cashierId)))
+
+                // ✅ Filter by Payment Type (if provided)
+                .filter(refund -> paymentType == null ||
+                        refund.getPaymentType() == paymentType)
+
+                // ✅ Filter by Status (if provided)
+//                .filter(refund -> status() == null ||
+//                        refund.getStatus() == status)
+
+                // ✅ Map to DTO
+                .map(RefundMapper::toDto)
+
+                // ✅ Sort by createdAt (latest first)
+                .sorted((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
+
+                .collect(Collectors.toList());
+//        return refundRepository.findByBranchId(branchId).stream()
+//                .map(RefundMapper::toDto)
+//                .collect(Collectors.toList());
+    }
+    @Override
+    public Page<RefundDTO> getRefundsByCashier(Long cashierId,
+                                             LocalDateTime start, LocalDateTime end, String search,Pageable pageable) {
+        Page<Refund> refunds = refundRepository.findByCashierId(cashierId, start, end, search, pageable);
+        return refunds.map(RefundMapper::toDto);
+    }
+
+
+
+    @Override
+    public void deleteRefund(Long id) {
+        if (!refundRepository.existsById(id)) {
+            throw new EntityNotFoundException("Refund not found");
+        }
+        refundRepository.deleteById(id);
+    }
+
+    @Override
+    public List<RefundDTO> getTodayRefundsByBranch(Long branchId) {
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = today.atStartOfDay();
+        LocalDateTime end = today.plusDays(1).atStartOfDay();
+
+        return refundRepository.findByBranchIdAndCreatedAtBetween(branchId, start, end)
+                .stream()
+                .map(RefundMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RefundDTO> getRefundsByCustomerId(Long customerId) {
+        List<Refund> refunds = refundRepository.findByCustomerId(customerId);
+
+        return refunds.stream()
+                .map(RefundMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RefundDTO> getTop5RecentRefundsByBranchId(Long branchId) {
+        branchRepository.findById(branchId)
+                .orElseThrow(() -> new EntityNotFoundException("Branch not found with ID: " + branchId));
+
+        List<Refund> refunds = refundRepository.findTop5ByBranchIdRefundByCreatedAtDesc(branchId);
+        return refunds.stream()
+                .map(RefundMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
 }

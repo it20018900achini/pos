@@ -126,7 +126,7 @@ public class StoreAnalyticsServiceImpl implements StoreAnalyticsService {
         return StoreAlertDTO.builder()
                 .lowStockAlerts(productRepository.findLowStockProducts(storeAdminId))
                 .noSalesToday(branchRepository.findBranchesWithNoSalesToday(storeAdminId))
-                .refundSpikeAlerts(refundRepository.findRefundSpikes(storeAdminId))
+//                .refundSpikeAlerts(refundRepository.findRefundSpikes(storeAdminId))
                 .inactiveCashiers(userRepository.findInactiveCashiers(storeAdminId, sevenDaysAgo))
                 .build();
     }
