@@ -10,13 +10,18 @@ public class RefundItemMapper {
 
         return RefundItemDTO.builder()
                 .id(item.getId())
+
+                // ✅ Null-safe product mapping
                 .productId(item.getProduct() != null ? item.getProduct().getId() : null)
-                .quantity(item.getQuantity())
-                .returned(item.getReturned())
-                .return_reason(item.getReturn_reason())
-                .return_quantity(item.getReturn_quantity())
-                .price(item.getPrice())
                 .product(item.getProduct() != null ? ProductMapper.toDto(item.getProduct()) : null)
+
+                // ✅ Defensive defaults for possibly-null numeric/boolean fields
+                .quantity(item.getQuantity() != null ? item.getQuantity() : 0)
+                .returned(item.getReturned() != null ? item.getReturned() : false)
+                .return_reason(item.getReturn_reason())
+                .return_quantity(item.getReturn_quantity() != null ? item.getReturn_quantity() : 0)
+                .price(item.getPrice() != null ? item.getPrice() : 0.0)
+
                 .build();
     }
 }

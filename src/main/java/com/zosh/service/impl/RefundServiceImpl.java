@@ -35,7 +35,7 @@ public class RefundServiceImpl implements RefundService {
 
     @Override
     public RefundDTO createRefund(RefundDTO dto) throws UserException {
-        System.out.println("HIIIIII");
+//        System.out.println(dto.getOrderId());
         User cashier = userService.getCurrentUser();
 
         Branch branch=cashier.getBranch();
@@ -50,6 +50,15 @@ public class RefundServiceImpl implements RefundService {
                 .customer(dto.getCustomer())
                 .paymentType(dto.getPaymentType())
                 .build();
+
+
+        // ✅ Set the Order entity
+        if (dto.getOrderId() != null) {
+            Order order = OrderRepository.findById(dto.getOrderId())
+                    .orElseThrow(() -> new UserException("Order not found with ID " + dto.getOrderId()));
+            refund.setOrder(order);
+        }
+
 
         List<RefundItem> refundItems = dto.getItems().stream().map(itemDto -> {
             Product product = productRepository.findById(itemDto.getProductId())

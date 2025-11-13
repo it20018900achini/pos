@@ -32,9 +32,14 @@ public class Refund {
     @JsonIgnore
     private Branch branch;
 
-    @ManyToOne
-    @JsonIgnore
+//    @ManyToOne
+//    @JsonIgnore
+//    private Order order;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
+
 
     @ManyToOne
     @JsonIgnore
