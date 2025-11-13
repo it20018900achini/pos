@@ -17,6 +17,7 @@ public class OrderMapper {
                 .cash(order.getCash())
                 .credit(order.getCredit())
                 .branchId(order.getBranch().getId())
+                .orderId(order.getId())
                 .cashierId(order.getCashier().getId())
                 .customer(order.getCustomer())
                 .createdAt(order.getCreatedAt())

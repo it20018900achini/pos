@@ -34,6 +34,10 @@ public class Refund {
 
     @ManyToOne
     @JsonIgnore
+    private Order order;
+
+    @ManyToOne
+    @JsonIgnore
     private User cashier;
 
     @ManyToOne

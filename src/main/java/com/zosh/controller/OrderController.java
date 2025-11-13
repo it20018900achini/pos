@@ -48,11 +48,11 @@ public class OrderController {
             @RequestParam(required = false) PaymentType paymentType,
             @RequestParam(required = false) OrderStatus status) {
         return ResponseEntity.ok(orderService.getOrdersByBranch(
-                    branchId,
-                    customerId,
-                    cashierId,
-                    paymentType,
-                    status
+                        branchId,
+                        customerId,
+                        cashierId,
+                        paymentType,
+                        status
                 )
         );
     }
@@ -94,4 +94,3 @@ public class OrderController {
 
 
 }
-

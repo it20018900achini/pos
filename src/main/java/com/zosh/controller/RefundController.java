@@ -34,15 +34,15 @@ public class RefundController {
     }
 
 
-    @GetMapping("/branch/{branchId}")
+    @GetMapping("/order/{orderId}")
     public ResponseEntity<List<RefundDTO>> getRefundsByBranch(
-            @PathVariable Long branchId,
+            @PathVariable Long orderId,
             @RequestParam(required = false) Long customerId,
             @RequestParam(required = false) Long cashierId,
             @RequestParam(required = false) PaymentType paymentType,
             @RequestParam(required = false) RefundStatus status) {
         return ResponseEntity.ok(refundService.getRefundsByBranch(
-                        branchId,
+                        orderId,
                         customerId,
                         cashierId,
                         paymentType,
@@ -62,9 +62,9 @@ public class RefundController {
         return ResponseEntity.ok(refunds);
     }
 
-    @GetMapping("/today/branch/{branchId}")
-    public ResponseEntity<List<RefundDTO>> getTodayRefunds(@PathVariable Long branchId) {
-        return ResponseEntity.ok(refundService.getTodayRefundsByBranch(branchId));
+    @GetMapping("/today/order/{orderId}")
+    public ResponseEntity<List<RefundDTO>> getTodayRefunds(@PathVariable Long orderId) {
+        return ResponseEntity.ok(refundService.getTodayRefundsByBranch(orderId));
     }
 
     @GetMapping("/customer/{customerId}")
@@ -72,10 +72,10 @@ public class RefundController {
         return ResponseEntity.ok(refundService.getRefundsByCustomerId(customerId));
     }
 
-    @GetMapping("/recent/{branchId}")
+    @GetMapping("/recent/{orderId}")
     @PreAuthorize("hasAnyAuthority('ROLE_BRANCH_MANAGER', 'ROLE_BRANCH_ADMIN')")
-    public ResponseEntity<List<RefundDTO>> getRecentRefunds(@PathVariable Long branchId) {
-        List<RefundDTO> recentRefunds = refundService.getTop5RecentRefundsByBranchId(branchId);
+    public ResponseEntity<List<RefundDTO>> getRecentRefunds(@PathVariable Long orderId) {
+        List<RefundDTO> recentRefunds = refundService.getTop5RecentRefundsByBranchId(orderId);
         return ResponseEntity.ok(recentRefunds);
     }
 

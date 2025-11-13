@@ -22,6 +22,7 @@ public class RefundDTO {
     private Double cash;
     private Double credit;
     private Long branchId;
+    private Long orderId;
     private Long cashierId;
     private Customer customer;
     private List<RefundItemDTO> items;
