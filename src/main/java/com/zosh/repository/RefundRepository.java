@@ -48,7 +48,10 @@ public interface RefundRepository extends JpaRepository<Refund, Long> {
     List<Refund> findByCashierAndCreatedAtBetween(User cashier,
                                                  LocalDateTime start,
                                                  LocalDateTime end);
-    List<Refund> findTop5ByBranchIdRefundByCreatedAtDesc(Long branchId);
+//    List<Refund> findTop5ByBranchIdOrderByCreatedAtDesc(Long branchId);
+
+
+    List<Refund> findTop5ByBranchIdOrderByCreatedAtDesc(Long branchId);
 
     @Query(""" 
             SELECT SUM(o.totalAmount) 

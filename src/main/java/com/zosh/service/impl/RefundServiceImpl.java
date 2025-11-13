@@ -162,7 +162,7 @@ public class RefundServiceImpl implements RefundService {
         branchRepository.findById(branchId)
                 .orElseThrow(() -> new EntityNotFoundException("Branch not found with ID: " + branchId));
 
-        List<Refund> refunds = refundRepository.findTop5ByBranchIdRefundByCreatedAtDesc(branchId);
+        List<Refund> refunds = refundRepository.findTop5ByBranchIdOrderByCreatedAtDesc(branchId);
         return refunds.stream()
                 .map(RefundMapper::toDto)
                 .collect(Collectors.toList());
