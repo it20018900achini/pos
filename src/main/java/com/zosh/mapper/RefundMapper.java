@@ -23,6 +23,7 @@ public class RefundMapper {
                 .cashierId(refund.getCashier() != null ? refund.getCashier().getId() : null)
 
                 .customer(refund.getCustomer())
+//                .order(refund.getOrder())
                 .createdAt(refund.getCreatedAt())
                 .paymentType(refund.getPaymentType())
                 // .status(refund.getStatus()) // enable if needed

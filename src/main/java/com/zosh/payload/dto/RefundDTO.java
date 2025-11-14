@@ -3,6 +3,7 @@ package com.zosh.payload.dto;
 import com.zosh.domain.RefundStatus;
 import com.zosh.domain.PaymentType;
 import com.zosh.modal.Customer;
+import com.zosh.modal.Order;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class RefundDTO {
     private Double credit;
     private Long branchId;
     private Long orderId;
+    private Order order;
     private Long cashierId;
     private Customer customer;
     private List<RefundItemDTO> items;
