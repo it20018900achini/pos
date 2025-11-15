@@ -36,8 +36,8 @@ public class Refund {
 //    @JsonIgnore
 //    private Order order;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "order_id", nullable = false)
+    @ManyToOne
+    @JoinColumn
     private Order order;
 
 
