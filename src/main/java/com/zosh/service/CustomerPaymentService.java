@@ -1,50 +1,27 @@
 package com.zosh.service;
 
-
-//import com.zosh.payment.model.CustomerPayment;
-//import com.zosh.payment.repo.CustomerPaymentRepository;
-//import com.zosh.payment.dto.CustomerPaymentCreateDTO;
-//import com.zosh.payment.model.PaymentMethod;
-import com.zosh.modal.CustomerPayment;
-import com.zosh.modal.CustomerPaymentCreateDTO;
+import com.zosh.payload.dto.CustomerPaymentDTO;
 import com.zosh.modal.PaymentMethod;
-import com.zosh.repository.CustomerPaymentRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class CustomerPaymentService {
-    private final CustomerPaymentRepository repo;
+public interface CustomerPaymentService {
 
-    public CustomerPayment createPayment(CustomerPaymentCreateDTO dto) {
+    CustomerPaymentDTO createPayment(CustomerPaymentDTO dto);
 
-        PaymentMethod method = PaymentMethod.valueOf(dto.getPaymentMethod().toUpperCase());
+    CustomerPaymentDTO updatePayment(Long id, CustomerPaymentDTO dto);
 
-        CustomerPayment payment = CustomerPayment.builder()
-                .customerId(dto.getCustomerId())
-                .cashierId(dto.getCashierId())
-                .amount(dto.getAmount())
-                .paymentMethod(method)
-                .reference(dto.getReference())
-                .note(dto.getNote())
-                .build();
+    void deletePayment(Long id);
 
-        return repo.save(payment);
-    }
+    CustomerPaymentDTO getById(Long id);
 
-    public Page<CustomerPayment> getPaymentsByCustomer(Long customerId, Pageable pageable) {
-        return repo.findByCustomerId(customerId, pageable);
-    }
+    Page<CustomerPaymentDTO> getPayments(Long customerId, Long cashierId, PaymentMethod paymentMethod,
+                                         LocalDateTime startDate, LocalDateTime endDate,
+                                         String sortBy, String sortDir, int page, int size);
 
-    public Page<CustomerPayment> getPaymentsByCashier(Long cashierId, Pageable pageable) {
-        return repo.findByCashierId(cashierId, pageable);
-    }
+    List<CustomerPaymentDTO> getByCustomerId(Long customerId);
 
-    public Page<CustomerPayment> getAll(Pageable pageable) {
-        return repo.findAll(pageable);
-    }
+    Page<CustomerPaymentDTO> getByCustomerId(Long customerId, int page, int size, String sortBy, String sortDir);
 }

@@ -1,9 +1,9 @@
 package com.zosh.service.impl;
 
+import com.zosh.controller.EmployeeController;
 import com.zosh.domain.PaymentType;
 import com.zosh.modal.PaymentSummary;
 import com.zosh.payload.dto.*;
-import com.zosh.repository.BranchRepository;
 import com.zosh.repository.InventoryRepository;
 import com.zosh.repository.OrderItemRepository;
 import com.zosh.repository.OrderRepository;
@@ -77,13 +77,13 @@ public class BranchAnalyticsServiceImpl implements BranchAnalyticsService{
     }
 
     @Override
-    public List<CashierPerformanceDTO> getTopCashierPerformanceByOrders(Long branchId) {
+    public List<EmployeeController.CashierPerformanceDTO> getTopCashierPerformanceByOrders(Long branchId) {
         List<Object[]> rawData = orderRepository.getTopCashiersByRevenue(branchId);
 
         return rawData
                 .stream()
                 .limit(5)
-                .map(obj -> CashierPerformanceDTO.builder()
+                .map(obj -> EmployeeController.CashierPerformanceDTO.builder()
                         .cashierId((Long) obj[0])
                         .cashierName((String) obj[1])
                         .totalRevenue((Double) obj[2])

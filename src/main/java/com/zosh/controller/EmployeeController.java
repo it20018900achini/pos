@@ -4,6 +4,8 @@ import com.zosh.domain.UserRole;
 import com.zosh.modal.User;
 import com.zosh.payload.dto.UserDTO;
 import com.zosh.service.EmployeeService;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,5 +72,16 @@ public class EmployeeController {
     ) throws Exception {
         List<User> employees = employeeService.findBranchEmployees(branchId,role);
         return new ResponseEntity<>(employees, HttpStatus.OK);
+    }
+
+    @Data
+    @Builder
+    public static class CashierPerformanceDTO {
+
+        private Long cashierId;
+        private String cashierName;
+        private Long totalOrders;
+        private Double totalRevenue;
+
     }
 }

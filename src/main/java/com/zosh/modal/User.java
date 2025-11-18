@@ -1,18 +1,13 @@
 package com.zosh.modal;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zosh.domain.UserRole;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -27,14 +22,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "fullName is mandatory")
+    @NotBlank
     private String fullName;
 
     private String password;
 
     @Column(nullable = false, unique = true)
-    @NotBlank(message = "Email is mandatory")
-    @Email(message = "Email should be valid")
+    @NotBlank
+    @Email
     private String email;
 
     private String phone;
@@ -46,7 +41,7 @@ public class User {
     private Branch branch;
 
     @Column(nullable = false)
-    @NotNull(message = "Role is mandatory")
+    @NotNull
     private UserRole role;
 
     @Column(nullable = false, updatable = false)
@@ -61,7 +56,4 @@ public class User {
     private Boolean verified = false;
 
     private LocalDateTime lastLogin;
-
-
 }
-

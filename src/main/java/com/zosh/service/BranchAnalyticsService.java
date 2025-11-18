@@ -1,5 +1,6 @@
 package com.zosh.service;
 
+import com.zosh.controller.EmployeeController;
 import com.zosh.modal.PaymentSummary;
 import com.zosh.payload.dto.*;
 
@@ -9,7 +10,7 @@ import java.util.List;
 public interface BranchAnalyticsService {
     List<DailySalesDTO> getDailySalesChart(Long branchId, int days);
     List<ProductPerformanceDTO> getTopProductsByQuantityWithPercentage(Long branchId);
-    List<CashierPerformanceDTO> getTopCashierPerformanceByOrders(Long branchId);
+    List<EmployeeController.CashierPerformanceDTO> getTopCashierPerformanceByOrders(Long branchId);
     List<CategorySalesDTO> getCategoryWiseSalesBreakdown(Long branchId,
                                                          LocalDate date);
 

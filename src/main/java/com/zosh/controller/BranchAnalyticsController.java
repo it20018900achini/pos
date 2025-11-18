@@ -50,7 +50,7 @@ public class BranchAnalyticsController {
      */
     @GetMapping("/top-cashiers")
     @PreAuthorize(ALLOWED_ROLES)
-    public ResponseEntity<List<CashierPerformanceDTO>> getTopCashiersByRevenue(
+    public ResponseEntity<List<EmployeeController.CashierPerformanceDTO>> getTopCashiersByRevenue(
             @RequestParam Long branchId
     ) {
         return ResponseEntity.ok(branchAnalyticsService.getTopCashierPerformanceByOrders(branchId));

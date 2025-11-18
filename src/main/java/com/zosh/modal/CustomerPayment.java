@@ -1,57 +1,46 @@
 package com.zosh.modal;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "customer_payments")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CustomerPayment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "customer_id", nullable = false)
-    private Long customerId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Customer customer;
 
-    @Column(name = "cashier_id", nullable = false)
-    private Long cashierId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private User cashier;
 
-    @Column(nullable = false, precision = 15, scale = 2)
-    private BigDecimal amount;
+
+    @ManyToOne
+    @JsonIgnore
+    private Branch branch;
+
+
+
+    private Double amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method", nullable = false, length = 32)
     private PaymentMethod paymentMethod;
 
-    @Column(length = 100)
     private String reference;
-
-    @Column(length = 500)
     private String note;
 
-    @Column(name = "paid_at")
-    private OffsetDateTime paidAt;
-
-    @Column(name = "created_at")
-    private OffsetDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private OffsetDateTime updatedAt;
-
-    @PrePersist
-    public void prePersist() {
-        OffsetDateTime now = OffsetDateTime.now();
-        paidAt = now;
-        createdAt = now;
-        updatedAt = now;
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        updatedAt = OffsetDateTime.now();
-    }
-
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

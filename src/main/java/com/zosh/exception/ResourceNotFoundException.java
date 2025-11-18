@@ -1,6 +1,6 @@
 package com.zosh.exception;
 
-public class ResourceNotFoundException extends Exception {
+public class ResourceNotFoundException extends RuntimeException { // Unchecked
     public ResourceNotFoundException(String message) {
         super(message);
     }
