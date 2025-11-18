@@ -1,14 +1,9 @@
 package com.zosh.service.impl;
 
 import com.zosh.domain.PaymentType;
-import com.zosh.exception.ResourceNotFoundException;
 import com.zosh.mapper.CustomerMapper;
-import com.zosh.modal.Customer;
-import com.zosh.modal.CustomerPayment;
 import com.zosh.modal.PaymentMethod;
 import com.zosh.payload.dto.*;
-import com.zosh.repository.CustomerPaymentRepository;
-import com.zosh.repository.CustomerRepository;
 import com.zosh.service.CustomerService;
 import com.zosh.service.CustomerSummaryService;
 import com.zosh.service.OrderService;
@@ -26,7 +21,6 @@ public class CustomerSummaryServiceImpl implements CustomerSummaryService {
     private final OrderService orderService;
     private final RefundService refundService;
     private final CustomerSummaryService summaryService;
-    private final CustomerPaymentRepository customerPaymentRepository;
 
     @Override
     public CustomerFullSummaryDTO getCustomerFullSummary(Long customerId) {
@@ -69,7 +63,6 @@ public class CustomerSummaryServiceImpl implements CustomerSummaryService {
 
 
 
-
         // 5️⃣ Build and return the summary DTO
         return CustomerFullSummaryDTO.builder()
                 .customer(customer)
@@ -81,11 +74,4 @@ public class CustomerSummaryServiceImpl implements CustomerSummaryService {
                 .totalRefundAmount(totalRefundAmount)
                 .build();
     }
-
-
-
-//    @Override
-//    public List<CustomerPaymentDTO> getPaymentsByCustomerId(Long customerId) {
-//        return List.of();
-//    }
 }
