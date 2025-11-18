@@ -16,6 +16,8 @@ public class CustomerFullSummaryDTO {
     private Double totalRefundAmount;    // sum of all refunds (cash + credit)
     private Double totalRefundCash;      // sum of cash refunds
     private Double totalRefundCredit;    // sum of credit refunds
-   ;
+    private  Double totalPaymentAmount;
+    private  Double totalPaymentCash;
+    private  Double totalPaymentCredit;
 
 }
