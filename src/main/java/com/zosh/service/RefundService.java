@@ -13,6 +13,7 @@ import java.util.List;
 public interface RefundService {
     RefundDTO createRefund(RefundDTO dto) throws UserException;
     RefundDTO getRefundById(Long id);
+    List<RefundDTO> getRefundsByOrder(Long orderId);
 
     List<RefundDTO> getRefundsByBranch(Long branchId,
                                      Long customerId,

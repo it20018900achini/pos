@@ -25,12 +25,16 @@ public class Order {
     private Double totalAmount;
     private Double cash;
     private Double credit;
+    private Double discount;
 
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JsonIgnore
+    @JoinColumn(name = "branch_id")
     private Branch branch;
+
+
+
 
     @ManyToOne
     @JsonIgnore

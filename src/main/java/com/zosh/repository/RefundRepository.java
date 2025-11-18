@@ -22,6 +22,7 @@ public interface RefundRepository extends JpaRepository<Refund, Long> {
 
     // Existing paginated query
 //    Page<Refund> findByCashierId(Long cashierId, Pageable pageable);
+    List<Refund> findByOrderId(Long orderId);
 
     // New query: cashier + date range + search
     @Query("SELECT o FROM Refund o " +

@@ -19,6 +19,7 @@ public class PaymentOrder {
 
     private Double cash;
     private Double credit;
+    private Double discount;
     private Double amount;
 
     private PaymentOrderStatus status = PaymentOrderStatus.PENDING;

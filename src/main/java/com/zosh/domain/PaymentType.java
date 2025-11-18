@@ -1,5 +1,10 @@
 package com.zosh.domain;
 
 public enum PaymentType {
-    CARD,MIX,CASH
+    CASH,
+    CARD,
+    BANK_TRANSFER,
+    MOBILE_PAYMENT,
+    CHEQUE
+,MIX
 }

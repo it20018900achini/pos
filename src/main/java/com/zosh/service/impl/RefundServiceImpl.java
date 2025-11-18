@@ -178,5 +178,12 @@ public class RefundServiceImpl implements RefundService {
                 .map(RefundMapper::toDto)
                 .collect(Collectors.toList());
     }
+    @Override
+    public List<RefundDTO> getRefundsByOrder(Long orderId) {
+        List<Refund> refunds = refundRepository.findByOrderId(orderId);
+        return refunds.stream()
+                .map(RefundMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
 }

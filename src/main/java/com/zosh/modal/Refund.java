@@ -25,6 +25,7 @@ public class Refund {
     private Double totalAmount;
     private Double cash;
     private Double credit;
+    private Double discount;
 
     private LocalDateTime createdAt;
 
