@@ -39,6 +39,20 @@ public interface RefundRepository extends JpaRepository<Refund, Long> {
             @Param("search") String search,
             Pageable pageable
     );
+    // New query: cashier + date range + search
+    @Query("SELECT o FROM Refund o " +
+            "WHERE o.branch.id = :branchId " +
+            "AND (:start IS NULL OR o.createdAt >= :start) " +
+            "AND (:end IS NULL OR o.createdAt <= :end) " +
+            "AND (:search IS NULL OR CAST(o.id AS string) LIKE %:search% " +
+            "OR LOWER(o.customer.fullName) LIKE %:search%)")
+    Page<Refund> findByBranchIdPagin(
+            @Param("branchId") Long branchId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("search") String search,
+            Pageable pageable
+    );
 
 
 

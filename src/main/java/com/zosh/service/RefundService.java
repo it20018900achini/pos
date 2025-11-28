@@ -16,6 +16,7 @@ public interface RefundService {
     RefundDTO getRefundById(Long id);
     List<RefundDTO> getRefundsByOrder(Long orderId);
     Page<RefundDTO> getRefundsByCustomerIdPagin(
+
             Long customerId,
             LocalDateTime start,
             LocalDateTime end,
@@ -23,10 +24,21 @@ public interface RefundService {
             Pageable pageable
     );
     List<RefundDTO> getRefundsByBranch(Long branchId,
-                                     Long customerId,
-                                     Long cashierId,
-                                     PaymentType paymentType,
-                                     RefundStatus status);
+                                       Long customerId,
+                                       Long cashierId,
+                                       PaymentType paymentType,
+                                       RefundStatus status);
+
+    Page<RefundDTO> getRefundsByBranchPagin(Long branchId,
+                                       Long customerId,
+                                       Long cashierId,
+                                       PaymentType paymentType,
+                                       RefundStatus status,
+                                            LocalDateTime start,
+                                            LocalDateTime end,
+                                            String search,
+                                            Pageable pageable
+    );
 
     // ← CHANGE THIS
     Page<RefundDTO> getRefundsByCashier(

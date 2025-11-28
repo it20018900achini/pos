@@ -96,11 +96,34 @@ public class RefundServiceImpl implements RefundService {
 
 
     @Override
+    public Page<RefundDTO> getRefundsByBranchPagin(Long branchId,
+                                              Long customerId,
+                                              Long cashierId,
+                                              PaymentType paymentType,
+                                              RefundStatus status,
+
+                                                   LocalDateTime start,
+                                                   LocalDateTime end,
+                                                   String search,
+                                                   Pageable pageable
+
+                                              ) {
+
+        Page<Refund> refunds = refundRepository.findByBranchIdPagin(branchId, start, end, search, pageable);
+        return refunds.map(RefundMapper::toDto);
+    }
+
+
+
+    @Override
     public List<RefundDTO> getRefundsByBranch(Long branchId,
-                                            Long customerId,
-                                            Long cashierId,
-                                            PaymentType paymentType,
-                                            RefundStatus status) {
+                                              Long customerId,
+                                              Long cashierId,
+                                              PaymentType paymentType,
+                                              RefundStatus status
+
+
+                                              ) {
         return refundRepository.findByBranchId(branchId).stream()
 
                 // ✅ Filter by Customer ID (if provided)
@@ -132,6 +155,8 @@ public class RefundServiceImpl implements RefundService {
 //                .map(RefundMapper::toDto)
 //                .collect(Collectors.toList());
     }
+
+
     @Override
     public Page<RefundDTO> getRefundsByCashier(Long cashierId,
                                              LocalDateTime start, LocalDateTime end, String search,Pageable pageable) {

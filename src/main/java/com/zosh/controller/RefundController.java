@@ -51,6 +51,34 @@ public class RefundController {
                 )
         );
     }
+    @GetMapping("/branch/t/{branchId}")
+    public ResponseEntity<Page<RefundDTO>> getRefundsByBranchPagin(
+            @PathVariable Long branchId,
+            @RequestParam(required = false) Long customerId,
+            @RequestParam(required = false) Long cashierId,
+            @RequestParam(required = false) PaymentType paymentType,
+            @RequestParam(required = false) RefundStatus status,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(required = false) String search,
+            Pageable pageable
+
+
+
+    ) {
+        return ResponseEntity.ok(refundService.getRefundsByBranchPagin(
+                        branchId,
+                        customerId,
+                        cashierId,
+                        paymentType,
+                        status,
+                start,
+                end,
+                search,
+                pageable
+                )
+        );
+    }
 
     @GetMapping("/refund/{refundId}")
     public ResponseEntity<List<RefundDTO>> getRefundsByBranchD(
