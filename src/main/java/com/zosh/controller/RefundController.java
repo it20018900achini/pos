@@ -1,5 +1,6 @@
 package com.zosh.controller;
 
+import com.zosh.domain.OrderStatus;
 import com.zosh.domain.RefundStatus;
 import com.zosh.domain.PaymentType;
 import com.zosh.exception.UserException;
@@ -34,16 +35,32 @@ public class RefundController {
         return ResponseEntity.ok(refundService.getRefundById(id));
     }
 
-
-    @GetMapping("/order/{orderId}")
+    @GetMapping("/branch/{branchId}")
     public ResponseEntity<List<RefundDTO>> getRefundsByBranch(
-            @PathVariable Long orderId,
+            @PathVariable Long branchId,
             @RequestParam(required = false) Long customerId,
             @RequestParam(required = false) Long cashierId,
             @RequestParam(required = false) PaymentType paymentType,
             @RequestParam(required = false) RefundStatus status) {
         return ResponseEntity.ok(refundService.getRefundsByBranch(
-                        orderId,
+                        branchId,
+                        customerId,
+                        cashierId,
+                        paymentType,
+                        status
+                )
+        );
+    }
+
+    @GetMapping("/refund/{refundId}")
+    public ResponseEntity<List<RefundDTO>> getRefundsByBranchD(
+            @PathVariable Long refundId,
+            @RequestParam(required = false) Long customerId,
+            @RequestParam(required = false) Long cashierId,
+            @RequestParam(required = false) PaymentType paymentType,
+            @RequestParam(required = false) RefundStatus status) {
+        return ResponseEntity.ok(refundService.getRefundsByBranch(
+                        refundId,
                         customerId,
                         cashierId,
                         paymentType,
@@ -63,9 +80,9 @@ public class RefundController {
         return ResponseEntity.ok(refunds);
     }
 
-    @GetMapping("/today/order/{orderId}")
-    public ResponseEntity<List<RefundDTO>> getTodayRefunds(@PathVariable Long orderId) {
-        return ResponseEntity.ok(refundService.getTodayRefundsByBranch(orderId));
+    @GetMapping("/today/refund/{refundId}")
+    public ResponseEntity<List<RefundDTO>> getTodayRefunds(@PathVariable Long refundId) {
+        return ResponseEntity.ok(refundService.getTodayRefundsByBranch(refundId));
     }
 
     @GetMapping("/customer/{customerId}")
@@ -90,10 +107,10 @@ public class RefundController {
 
     }
 
-    @GetMapping("/recent/{orderId}")
+    @GetMapping("/recent/{refundId}")
     @PreAuthorize("hasAnyAuthority('ROLE_BRANCH_MANAGER', 'ROLE_BRANCH_ADMIN')")
-    public ResponseEntity<List<RefundDTO>> getRecentRefunds(@PathVariable Long orderId) {
-        List<RefundDTO> recentRefunds = refundService.getTop5RecentRefundsByBranchId(orderId);
+    public ResponseEntity<List<RefundDTO>> getRecentRefunds(@PathVariable Long refundId) {
+        List<RefundDTO> recentRefunds = refundService.getTop5RecentRefundsByBranchId(refundId);
         return ResponseEntity.ok(recentRefunds);
     }
 
