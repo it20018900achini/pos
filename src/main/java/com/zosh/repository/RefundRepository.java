@@ -44,8 +44,13 @@ public interface RefundRepository extends JpaRepository<Refund, Long> {
             "WHERE o.branch.id = :branchId " +
             "AND (:start IS NULL OR o.createdAt >= :start) " +
             "AND (:end IS NULL OR o.createdAt <= :end) " +
-            "AND (:search IS NULL OR CAST(o.id AS string) LIKE %:search% " +
-            "OR LOWER(o.customer.fullName) LIKE %:search%)")
+            "AND (" +
+            "   :search IS NULL OR " +
+            "   CAST(o.id AS string) LIKE %:search% OR " +
+            "   LOWER(o.customer.fullName) LIKE %:search% OR " +
+            "   LOWER(o.customer.phone) LIKE %:search% OR " +
+            "   LOWER(o.customer.email) LIKE %:search%" +
+            ")")
     Page<Refund> findByBranchIdPagin(
             @Param("branchId") Long branchId,
             @Param("start") LocalDateTime start,
