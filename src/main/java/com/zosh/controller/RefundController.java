@@ -3,6 +3,7 @@ package com.zosh.controller;
 import com.zosh.domain.RefundStatus;
 import com.zosh.domain.PaymentType;
 import com.zosh.exception.UserException;
+import com.zosh.payload.dto.OrderDTO;
 import com.zosh.payload.dto.RefundDTO;
 import com.zosh.service.RefundService;
 import lombok.RequiredArgsConstructor;
@@ -70,6 +71,23 @@ public class RefundController {
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<RefundDTO>> getCustomerRefunds(@PathVariable Long customerId) {
         return ResponseEntity.ok(refundService.getRefundsByCustomerId(customerId));
+    }
+    @GetMapping("/customer/t/{customerId}")
+    public ResponseEntity<List<RefundDTO>> getCustomerRefundsPagin(
+
+            @PathVariable Long customerId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(required = false) String search,
+            Pageable pageable
+
+    ) {
+//        return ResponseEntity.ok(refundService.getRefundsByCustomerId(customerId));
+
+        Page<OrderDTO> refunds = refundService.getRefundByCustomerIdPagin(customerId, start, end, search,pageable);
+        return ResponseEntity.ok(refunds);
+
+
     }
 
     @GetMapping("/recent/{orderId}")

@@ -3,6 +3,7 @@ package com.zosh.service;
 import com.zosh.domain.RefundStatus;
 import com.zosh.domain.PaymentType;
 import com.zosh.exception.UserException;
+import com.zosh.payload.dto.OrderDTO;
 import com.zosh.payload.dto.RefundDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,13 @@ public interface RefundService {
     RefundDTO createRefund(RefundDTO dto) throws UserException;
     RefundDTO getRefundById(Long id);
     List<RefundDTO> getRefundsByOrder(Long orderId);
-
+    Page<RefundDTO> getRefundsByCustomerIdPagin(
+            Long customerId,
+            LocalDateTime start,
+            LocalDateTime end,
+            String search,
+            Pageable pageable
+    );
     List<RefundDTO> getRefundsByBranch(Long branchId,
                                      Long customerId,
                                      Long cashierId,

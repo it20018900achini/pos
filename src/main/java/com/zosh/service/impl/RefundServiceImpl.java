@@ -4,8 +4,10 @@ package com.zosh.service.impl;
 import com.zosh.domain.RefundStatus;
 import com.zosh.domain.PaymentType;
 import com.zosh.exception.UserException;
+import com.zosh.mapper.OrderMapper;
 import com.zosh.mapper.RefundMapper;
 import com.zosh.modal.*;
+import com.zosh.payload.dto.OrderDTO;
 import com.zosh.payload.dto.RefundDTO;
 import com.zosh.repository.*;
 
@@ -168,6 +170,12 @@ public class RefundServiceImpl implements RefundService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Page<RefundDTO> getRefundsByCustomerIdPagin(Long customerId,
+                                                     LocalDateTime start, LocalDateTime end, String search, Pageable pageable) {
+        Page<Refund> orders = refundRepository.findByCustomerIdPagin(customerId, start, end, search, pageable);
+        return orders.map(RefundMapper::toDto);
+    }
     @Override
     public List<RefundDTO> getTop5RecentRefundsByBranchId(Long branchId) {
         branchRepository.findById(branchId)

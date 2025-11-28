@@ -1,5 +1,6 @@
 package com.zosh.repository;
 
+import com.zosh.modal.Order;
 import com.zosh.modal.Refund;
 import com.zosh.modal.Refund;
 import com.zosh.modal.User;
@@ -41,7 +42,26 @@ public interface RefundRepository extends JpaRepository<Refund, Long> {
 
 
 
-    List<Refund> findByCustomerId(Long customerId);
+//    List<Refund> findByCustomerId(Long customerId);
+
+    // New query: cashier + date range + search
+    @Query("SELECT o FROM Refund o " +
+            "WHERE o.customer.id = :customerId " +
+            "AND (:start IS NULL OR o.createdAt >= :start) " +
+            "AND (:end IS NULL OR o.createdAt <= :end) " +
+            "AND (:search IS NULL OR CAST(o.id AS string) LIKE %:search% " +
+            "OR LOWER(o.customer.fullName) LIKE %:search%)")
+    Page<Refund> findByCustomerIdPagin(
+            @Param("customerId") Long customerId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("search") String search,
+            Pageable pageable
+    );
+
+
+
+
     List<Refund> findByBranchId(Long branchId);
     List<Refund> findByBranchIdAndCreatedAtBetween(Long branchId,
                                                   LocalDateTime start,

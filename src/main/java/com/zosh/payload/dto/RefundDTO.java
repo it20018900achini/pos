@@ -25,7 +25,6 @@ public class RefundDTO {
     private Long branchId;
     private Long orderId;
     private OrderDTO order; // Change this from Order to OrderDTO
-
     private Long cashierId;
     private Customer customer;
     private List<RefundItemDTO> items;
