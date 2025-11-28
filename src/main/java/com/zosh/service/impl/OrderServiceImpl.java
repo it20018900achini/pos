@@ -157,6 +157,28 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
+
+//
+//    @Override
+//    public List<OrderDTO> getOrdersByCustomerIdPagin(
+//            Long customerId,
+//            LocalDateTime start,
+//            LocalDateTime end,
+//            String search,
+//            Pageable pageable
+//                                                     ) {
+//        Page<Order> orders = orderRepository.findByCustomerIdPagin(customerId, start, end, search, pageable);
+//
+//        return orders.map(OrderMapper::toDto);
+//    }
+
+    @Override
+    public Page<OrderDTO> getOrdersByCustomerIdPagin(Long customerId,
+                                             LocalDateTime start, LocalDateTime end, String search,Pageable pageable) {
+        Page<Order> orders = orderRepository.findByCustomerIdPagin(customerId, start, end, search, pageable);
+        return orders.map(OrderMapper::toDto);
+    }
+
     @Override
     public List<OrderDTO> getTop5RecentOrdersByBranchId(Long branchId) {
         branchRepository.findById(branchId)

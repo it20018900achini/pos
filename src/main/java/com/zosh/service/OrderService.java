@@ -36,5 +36,12 @@ public interface OrderService {
     void deleteOrder(Long id);
     List<OrderDTO> getTodayOrdersByBranch(Long branchId);
     List<OrderDTO> getOrdersByCustomerId(Long customerId);
+    Page<OrderDTO> getOrdersByCustomerIdPagin(
+            Long customerId,
+            LocalDateTime start,
+            LocalDateTime end,
+            String search,
+            Pageable pageable
+    );
     List<OrderDTO> getTop5RecentOrdersByBranchId(Long branchId);
 }

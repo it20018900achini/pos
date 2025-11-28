@@ -74,8 +74,25 @@ public class OrderController {
     }
 
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<OrderDTO>> getCustomerOrders(@PathVariable Long customerId) {
+    public ResponseEntity<List<OrderDTO>> getCustomerOrders(@PathVariable Long customerId
+    ) {
         return ResponseEntity.ok(orderService.getOrdersByCustomerId(customerId));
+    }
+
+    @GetMapping("/customer/t/{customerId}")
+    public ResponseEntity<Page<OrderDTO>> getCustomerOrdersPagin(
+            @PathVariable Long customerId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(required = false) String search,
+            Pageable pageable
+
+    ) {
+//        return ResponseEntity.ok(orderService.getOrdersByCustomerIdPagin(customerId, start, end, search,pageable));
+
+        Page<OrderDTO> orders = orderService.getOrdersByCustomerIdPagin(customerId, start, end, search,pageable);
+        return ResponseEntity.ok(orders);
+
     }
 
     @GetMapping("/recent/{branchId}")
