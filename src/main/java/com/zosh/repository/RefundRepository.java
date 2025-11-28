@@ -42,7 +42,7 @@ public interface RefundRepository extends JpaRepository<Refund, Long> {
 
 
 
-//    List<Refund> findByCustomerId(Long customerId);
+    List<Refund> findByCustomerId(Long customerId);
 
     // New query: cashier + date range + search
     @Query("SELECT o FROM Refund o " +

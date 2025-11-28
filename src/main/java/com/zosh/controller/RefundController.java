@@ -73,7 +73,7 @@ public class RefundController {
         return ResponseEntity.ok(refundService.getRefundsByCustomerId(customerId));
     }
     @GetMapping("/customer/t/{customerId}")
-    public ResponseEntity<List<RefundDTO>> getCustomerRefundsPagin(
+    public ResponseEntity<Page<RefundDTO>> getCustomerRefundsPagin(
 
             @PathVariable Long customerId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
@@ -84,7 +84,7 @@ public class RefundController {
     ) {
 //        return ResponseEntity.ok(refundService.getRefundsByCustomerId(customerId));
 
-        Page<OrderDTO> refunds = refundService.getRefundByCustomerIdPagin(customerId, start, end, search,pageable);
+        Page<RefundDTO> refunds = refundService.getRefundsByCustomerIdPagin(customerId, start, end, search,pageable);
         return ResponseEntity.ok(refunds);
 
 
