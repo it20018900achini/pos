@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RefundService {
+    List<RefundDTO> getRefundsByCustomer(Long customerId);
+
     RefundDTO createRefund(RefundDTO dto) throws UserException;
     RefundDTO getRefundById(Long id);
     List<RefundDTO> getRefundsByOrder(Long orderId);
@@ -23,6 +25,8 @@ public interface RefundService {
             String search,
             Pageable pageable
     );
+
+
     List<RefundDTO> getRefundsByBranch(Long branchId,
                                        Long customerId,
                                        Long cashierId,

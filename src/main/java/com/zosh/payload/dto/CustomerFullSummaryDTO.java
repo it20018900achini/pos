@@ -1,23 +1,40 @@
 package com.zosh.payload.dto;
 
-import lombok.*;
+import com.zosh.modal.PaymentMethod;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CustomerFullSummaryDTO {
+
+    // -------------------
+    // Customer info
+    // -------------------
     private CustomerDTO customer;
 
-    // Totals
-    private Double totalAmount;          // sum of all orders
-    private Double totalCash;            // sum of all order cash
-    private Double totalCredit;          // sum of all order credit
-    private Double totalRefundAmount;    // sum of all refunds (cash + credit)
-    private Double totalRefundCash;      // sum of cash refunds
-    private Double totalRefundCredit;    // sum of credit refunds
-    private  Double totalPaymentAmount;
-    private  Double totalPaymentCash;
-    private  Double totalPaymentCredit;
+    // -------------------
+    // Orders summary
+    // -------------------
+    private double totalAmount;
+    private double totalCash;
+    private double totalCredit;
 
+    // -------------------
+    // Refunds summary
+    // -------------------
+    private double totalRefundAmount;
+    private double totalRefundCash;
+    private double totalRefundCredit;
+
+    // -------------------
+    // Payments summary
+    // -------------------
+    private double totalPaymentAmount;
+    private double totalPaymentCash;
+    private double totalPaymentCredit;
 }

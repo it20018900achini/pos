@@ -113,7 +113,13 @@ public class RefundServiceImpl implements RefundService {
         return refunds.map(RefundMapper::toDto);
     }
 
-
+    @Override
+    public List<RefundDTO> getRefundsByCustomer(Long customerId) {
+        return refundRepository.findAllRefundsByCustomer(customerId)
+                .stream()
+                .map(RefundMapper::toDto)
+                .toList();
+    }
 
     @Override
     public List<RefundDTO> getRefundsByBranch(Long branchId,

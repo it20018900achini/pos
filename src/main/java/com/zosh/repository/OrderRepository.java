@@ -19,7 +19,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-
+    @Query("""
+        SELECT 
+            COALESCE(SUM(o.totalAmount),0),
+            COALESCE(SUM(o.cash),0),
+            COALESCE(SUM(o.credit),0)
+        FROM Order o
+        WHERE o.customer.id = :customerId
+    """)
+    List<Object[]> getOrderSummary(@Param("customerId") Long customerId);
     // Existing paginated query
 //    Page<Order> findByCashierId(Long cashierId, Pageable pageable);
 

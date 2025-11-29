@@ -21,6 +21,15 @@ import java.util.Optional;
 
 public interface RefundRepository extends JpaRepository<Refund, Long> {
 
+    @Query("""
+        SELECT 
+            COALESCE(SUM(r.cash),0),
+            COALESCE(SUM(r.credit),0),
+            COALESCE(SUM(r.cash + r.credit),0)
+        FROM Refund r
+        WHERE r.order.customer.id = :customerId
+    """)
+    List<Object[]> getRefundSummary(@Param("customerId") Long customerId);
     // Existing paginated query
 //    Page<Refund> findByCashierId(Long cashierId, Pageable pageable);
     List<Refund> findByOrderId(Long orderId);
@@ -59,7 +68,12 @@ public interface RefundRepository extends JpaRepository<Refund, Long> {
             Pageable pageable
     );
 
-
+    @Query("""
+       SELECT r 
+       FROM Refund r 
+       WHERE r.order.customer.id = :customerId
+       """)
+    List<Refund> findAllRefundsByCustomer(@Param("customerId") Long customerId);
 
     List<Refund> findByCustomerId(Long customerId);
 
