@@ -56,6 +56,33 @@ public class OrderController {
                 )
         );
     }
+
+    @GetMapping("/branch/t/{branchId}")
+    public ResponseEntity<Page<OrderDTO>> getOrdersByBranchPagin(
+            @PathVariable Long branchId,
+            @RequestParam(required = false) Long customerId,
+            @RequestParam(required = false) Long cashierId,
+            @RequestParam(required = false) PaymentType paymentType,
+            @RequestParam(required = false) OrderStatus status,
+
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(required = false) String search,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(orderService.getOrdersByBranchPagin(
+                        branchId,
+                        customerId,
+                        cashierId,
+                        paymentType,
+                        status,
+                start,
+                end,
+                search,
+                pageable
+                )
+        );
+    }
     @GetMapping("/cashier/{cashierId}")
     public ResponseEntity<Page<OrderDTO>> getOrdersByCashier(
             @PathVariable Long cashierId,

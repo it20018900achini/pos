@@ -3,10 +3,13 @@ package com.zosh.service.impl;
 
 import com.zosh.domain.OrderStatus;
 import com.zosh.domain.PaymentType;
+import com.zosh.domain.RefundStatus;
 import com.zosh.exception.UserException;
 import com.zosh.mapper.OrderMapper;
+import com.zosh.mapper.RefundMapper;
 import com.zosh.modal.*;
 import com.zosh.payload.dto.OrderDTO;
+import com.zosh.payload.dto.RefundDTO;
 import com.zosh.repository.*;
 
 import com.zosh.service.OrderService;
@@ -127,6 +130,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+    @Override
+    public Page<OrderDTO> getOrdersByBranchPagin(Long branchId,
+                                                   Long customerId,
+                                                   Long cashierId,
+                                                   PaymentType paymentType,
+                                                   OrderStatus status,
+
+                                                   LocalDateTime start,
+                                                   LocalDateTime end,
+                                                   String search,
+                                                   Pageable pageable
+
+    ) {
+
+        Page<Order> orders = orderRepository.findByBranchIdPagin(branchId, start, end, search, pageable);
+        return orders.map(OrderMapper::toDto);
+    }
 
     @Override
     public void deleteOrder(Long id) {

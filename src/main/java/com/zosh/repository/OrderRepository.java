@@ -60,6 +60,29 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             Pageable pageable
     );
 
+
+    // New query: cashier + date range + search
+    @Query("SELECT o FROM Order o " +
+            "WHERE o.branch.id = :branchId " +
+            "AND (:start IS NULL OR o.createdAt >= :start) " +
+            "AND (:end IS NULL OR o.createdAt <= :end) " +
+            "AND (" +
+            "   :search IS NULL OR " +
+            "   CAST(o.id AS string) LIKE %:search% OR " +
+            "   LOWER(o.customer.fullName) LIKE %:search% OR " +
+            "   LOWER(o.customer.phone) LIKE %:search% OR " +
+            "   LOWER(o.customer.email) LIKE %:search%" +
+            ")")
+    Page<Order> findByBranchIdPagin(
+            @Param("branchId") Long branchId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("search") String search,
+            Pageable pageable
+    );
+
+
+
     List<Order> findByBranchId(Long branchId);
     List<Order> findByBranchIdAndCreatedAtBetween(Long branchId,
                                                   LocalDateTime start,
